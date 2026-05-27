@@ -6,9 +6,19 @@ namespace th08
 DIFFABLE_STATIC(i32, g_ScreenEffectCounter);
 DIFFABLE_STATIC(ScreenEffect, g_ScreenEffect);
 
-// STUB: th08 0x45b020
 void ScreenEffect::Clear(D3DCOLOR color)
 {
+    g_Supervisor.d3dDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, color, 1.0, 0);
+    if (g_Supervisor.d3dDevice->Present(NULL, NULL, NULL, NULL) < 0)
+    {
+        g_Supervisor.d3dDevice->Reset(&g_Supervisor.presentParameters);
+    }
+    g_Supervisor.d3dDevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, color, 1.0, 0);
+    if (g_Supervisor.d3dDevice->Present(NULL, NULL, NULL, NULL) < 0)
+    {
+        g_Supervisor.d3dDevice->Reset(&g_Supervisor.presentParameters);
+    }
+    return;
 }
 
 // STUB: th08 0x45b0e0

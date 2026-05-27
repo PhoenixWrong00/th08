@@ -4,6 +4,7 @@
 #include "inttypes.hpp"
 #include "utils.hpp"
 #include <d3dx8.h>
+#include "Supervisor.hpp"
 
 namespace th08
 {
