@@ -44,7 +44,11 @@ struct ScreenEffect
     static ZunResult AddedCallback(ScreenEffect *screenEffect);
     static ZunResult DeletedCallback(ScreenEffect *screenEffect);
 
-    unknown_fields(0x0, 0x34);
+    unknown_fields(0x0, 0x10);
+    u32 fadeAlpha;
+    i32 effectLength;
+    unknown_fields(0x18, 0x10);
+    ZunTimer timer;
 };
 
 DIFFABLE_EXTERN(i32, g_ScreenEffectCounter);
