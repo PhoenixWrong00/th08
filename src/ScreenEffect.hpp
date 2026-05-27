@@ -5,6 +5,7 @@
 #include "utils.hpp"
 #include <d3dx8.h>
 #include "Supervisor.hpp"
+#include "AnmManager.hpp"
 
 namespace th08
 {
