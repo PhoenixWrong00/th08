@@ -41,7 +41,7 @@ ChainCallbackResult ScreenEffect::CalcFadeIn(ScreenEffect *screenEffect)
     if (screenEffect->effectLength != 0)
     {
         screenEffect->fadeAlpha = 255.0f - (((float)screenEffect->timer * 255.0f) / screenEffect->effectLength);
-        if (screenEffect->fadeAlpha < 0)
+        if ((i32)screenEffect->fadeAlpha < 0)
         {
             screenEffect->fadeAlpha = 0;
         }
@@ -52,7 +52,7 @@ ChainCallbackResult ScreenEffect::CalcFadeIn(ScreenEffect *screenEffect)
         return CHAIN_CALLBACK_RESULT_CONTINUE_AND_REMOVE_JOB;
     }
 
-    screenEffect->timer.Tick();
+    screenEffect->timer++;
     return CHAIN_CALLBACK_RESULT_CONTINUE;
 }
 
