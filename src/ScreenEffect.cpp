@@ -56,9 +56,42 @@ ChainCallbackResult ScreenEffect::CalcFadeIn(ScreenEffect *screenEffect)
     return CHAIN_CALLBACK_RESULT_CONTINUE;
 }
 
-// STUB: th08 0x45b1e0
 void ScreenEffect::DrawSquare(ZunRect *rectDimensions, D3DCOLOR color)
 {
+    g_AnmManager->FlushVertexBuffer();
+
+    VertexDiffuseXyzrhw vertices[4];
+
+    memcpy(&vertices[0].pos, &Float3(rectDimensions->left, rectDimensions->top, 0.0f), sizeof(Float3));
+    memcpy(&vertices[1].pos, &Float3(rectDimensions->right, rectDimensions->top, 0.0f), sizeof(Float3));
+    memcpy(&vertices[2].pos, &Float3(rectDimensions->left, rectDimensions->bottom, 0.0f), sizeof(Float3));
+    memcpy(&vertices[3].pos, &Float3(rectDimensions->right, rectDimensions->bottom, 0.0f), sizeof(Float3));
+    vertices[0].w = vertices[1].w = vertices[2].w = vertices[3].w = 1.00f;
+    vertices[0].diffuse = vertices[1].diffuse = vertices[2].diffuse = vertices[3].diffuse = color;
+
+    g_Supervisor.d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+    g_Supervisor.d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+    g_Supervisor.d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);
+    g_Supervisor.d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
+    if (!g_Supervisor.IsDepthTestDisabled())
+    {
+        g_Supervisor.d3dDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+    }
+
+    g_Supervisor.d3dDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+    g_Supervisor.d3dDevice->SetVertexShader(D3DFVF_DIFFUSE | D3DFVF_XYZRHW);
+    g_Supervisor.d3dDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, vertices, sizeof(*vertices));
+    g_AnmManager->ClearVertexShader();
+    g_AnmManager->ClearSprite();
+    g_AnmManager->ClearTexture();
+    g_AnmManager->ClearColorOp();
+    g_AnmManager->ClearBlendMode();
+    g_AnmManager->ClearZWrite();
+
+    g_Supervisor.d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
+    g_Supervisor.d3dDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
+    g_Supervisor.d3dDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+    g_Supervisor.d3dDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
 }
 
 // STUB: th08 0x45b490
